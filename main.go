@@ -217,7 +217,7 @@ func getMetrics(options *Options) map[string]string {
 					continue
 				}
 				kv := strings.Split(strings.Replace(l, "\t", " ", -1), ":")
-				if len(kv) > 2 {
+				if len(kv) < 2 {
 					continue
 				}
 				key := strings.TrimSpace(kv[0])
@@ -237,6 +237,31 @@ func getMetrics(options *Options) map[string]string {
 
 		}
 
+		if conn, err := dial(tcpaddr.String(), timeout, options.ClientCert); err == nil {
+			res = sendZookeeperCmd(conn, h, "wchs")
+			lines := strings.Split(res, "\n")
+			for _, l := range lines {
+				if l == "" {
+					continue
+				}
+				kv := strings.Split(strings.Replace(l, "\t", " ", -1), ":")
+				if len(kv) < 2 {
+					continue
+				}
+				key := strings.TrimSpace(kv[0])
+				value := strings.TrimSpace(kv[1])
+				if !isDigit(value) {
+					log.Printf("warning: skipping metric %q which holds not-digit value: %q", key, value)
+					continue
+				}
+				switch key {
+				case "Total watches":
+					key = "total_watches"
+				}
+				metrics[fmt.Sprintf("zk_wchs_%s{%s}", key, hostLabel)] = value
+			}
+
+		}
 		metrics[zkUp] = "1"
 	}
 
