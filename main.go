@@ -27,13 +27,13 @@ var (
 )
 
 func main() {
-	location := flag.String("location", "/metrics", "metrics location")
-	listen := flag.String("listen", "0.0.0.0:9141", "address to listen on")
+	location := flag.String("metrics-path", "/metrics", "metrics location")
+	listen := flag.String("bind-addr", "0.0.0.0:9141", "address to listen on")
 	timeout := flag.Int64("timeout", 30, "timeout for connection to zk servers, in seconds")
-	zkhosts := flag.String("zk-hosts", "127.0.0.1:2181", "comma separated list of zk servers, e.g. '10.0.0.1:2181,10.0.0.2:2181,10.0.0.3:2181'")
-	zktlsauth := flag.Bool("zk-tls-auth", false, "zk tls client authentication")
-	zktlscert := flag.String("zk-tls-auth-cert", "", "cert for zk tls client authentication")
-	zktlskey := flag.String("zk-tls-auth-key", "", "key for zk tls client authentication")
+	zkhosts := flag.String("zookeeper", "127.0.0.1:2181", "comma separated list of zk servers, e.g. '10.0.0.1:2181,10.0.0.2:2181,10.0.0.3:2181'")
+	zktlsauth := flag.Bool("enable-tls", false, "zk tls client authentication")
+	zktlscert := flag.String("cert", "", "cert for zk tls client authentication")
+	zktlskey := flag.String("cert-key", "", "key for zk tls client authentication")
 
 	flag.Parse()
 
